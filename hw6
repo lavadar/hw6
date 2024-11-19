@@ -1,0 +1,31 @@
+import csv
+
+# Функция для определения категории покупки (пример)
+def get_category(user_id):
+    # Предположим, у нас есть словарь с категориями покупок для каждого user_id
+    purchase_categories = {
+        '1840e0b9d4': 'Продукты',
+        '4e4f90fcfb': 'Электроника',
+        # добавьте другие user_id и категории здесь
+    }
+    return purchase_categories.get(user_id, None)
+
+# Открываем файлы для чтения и записи
+with open('visit_log.csv', 'r', encoding='utf-8') as infile, open('funnel.csv', 'w', encoding='utf-8', newline='') as outfile:
+    reader = csv.reader(infile)
+    writer = csv.writer(outfile)
+
+    # Записываем заголовок в новый файл
+    writer.writerow(['user_id', 'source', 'category'])
+
+    # Пропускаем заголовок в исходном файле
+    next(reader)
+
+    for row in reader:
+        user_id = row[0]
+        source = row[1]
+        category = get_category(user_id)
+
+        if category:
+            # Записываем только те строки, где есть категория
+            writer.writerow([user_id, source, category])
